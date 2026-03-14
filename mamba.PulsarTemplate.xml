@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PluginData xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="GitHubPlugin">
+    <Id>mamba.PulsarTemplate</Id>
+    <FriendlyName>mamba.PulsarTemplate</FriendlyName>
+    <Author>mamba</Author>
+    <Description>Advanced Space Engineers modular plugin template for Pulsar.</Description>
+</PluginData>
