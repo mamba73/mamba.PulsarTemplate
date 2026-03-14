@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net48</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <AssemblyName>mamba.PulsarTemplate</AssemblyName>
+        <RootNamespace>Plugin</RootNamespace>
+
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+        <Deterministic>false</Deterministic>
+
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <Platforms>x64</Platforms>
+        <PlatformTarget>x64</PlatformTarget>
+        <Prefer32Bit>false</Prefer32Bit>
+        <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="HarmonyLib">
+            <HintPath>$(MSBuildProjectDirectory)\Dependencies\0Harmony.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Pulsar.Shared">
+            <HintPath>$(MSBuildProjectDirectory)\Dependencies\Pulsar.Shared.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Sandbox.Game">
+            <HintPath>$(MSBuildProjectDirectory)\Dependencies\Sandbox.Game.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Sandbox.Common">
+            <HintPath>$(MSBuildProjectDirectory)\Dependencies\Sandbox.Common.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Sandbox.Graphics">
+            <HintPath>$(MSBuildProjectDirectory)\Dependencies\Sandbox.Graphics.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="VRage.Game">
+            <HintPath>$(MSBuildProjectDirectory)\Dependencies\VRage.Game.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="VRage.Input">
+            <HintPath>$(MSBuildProjectDirectory)\Dependencies\VRage.Input.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="VRage.Library">
+            <HintPath>$(MSBuildProjectDirectory)\Dependencies\VRage.Library.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="VRage.Math">
+            <HintPath>$(MSBuildProjectDirectory)\Dependencies\VRage.Math.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="VRage">
+            <HintPath>$(MSBuildProjectDirectory)\Dependencies\VRage.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="VRage.Render">
+            <HintPath>$(MSBuildProjectDirectory)\Dependencies\VRage.Render.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="System.Xml" />
+        <Reference Include="System.Xml.Serialization" />
+    </ItemGroup>
+
+</Project>
