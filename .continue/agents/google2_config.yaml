@@ -1,0 +1,129 @@
+name: Google test Config 01
+version: 1.0.0
+schema: v1
+
+rules:
+  - "Language: Respond in Croatian (ijekavica) or English. No Serbian/Ekavica."
+  - "Comments: All code comments must be in ENGLISH."
+  - "File Header: Mandatory! Always put the relative file path as a comment in the very first line."
+
+contextProviders:
+  - name: codebase
+    params:
+      useReranking: true
+      nRetrieve: 20
+      nFinal: 5
+
+models:
+
+  # 1. LARAVEL & PHP
+  - name: "Laravel 11 / PHP 8.3 (Gemini 2.0 Pro)"
+    provider: google
+    model: gemini-2.0-pro-exp
+    apiKey: ${{ secrets.GOOGLE_API_KEY }}
+    systemMessage: |
+      Context: PHP 8.3 / Laravel 11.
+      STRICT RULES:
+      - Use modern PHP features: Readonly properties, Enums, Union types.
+      - Laravel: Follow latest conventions (Action classes, Form Requests, Vite).
+      - Style: PSR-12 coding standard.
+      - Security: Always validate and sanitize user input. Use prepared statements for DB queries.
+      - Performance: Cache results, use eager loading for relationships.
+      - Testing: Write unit tests for critical logic. Use Laravel's testing tools.
+      
+  # 2. SPACE ENGINEERS: IN-GAME SCRIPTS
+  - name: "SE: In-Game Script (Gemini 2.0 Flash)"
+    provider: google
+    model: gemini-2.0-flash
+    apiKey: ${{ secrets.GOOGLE_API_KEY }}
+    systemMessage: |
+      Context: Space Engineers (SE) In-Game Scripting (Programmable Block).
+      STRICT RULES:
+      - Use C# 6.0 and .NET Framework 4.6.
+      - API: VRage.Game, VRageMath, Sandbox.ModAPI.Ingame.
+      - Constraints: NO LINQ, NO Reflection, NO file access, NO multithreading.
+      - Style: Use string.Format() instead of interpolation ($).
+      - Safety: Always respect SE scripting limitations to prevent runtime errors and ensure game stability.
+      - Optimization: Minimize allocations and avoid heavy computations in the main game loop to maintain performance.
+            
+  # 3. SPACE ENGINEERS:  PULSAR PLUGIN
+  - name: "SE: Pulsar Plugin (Gemini 2.0 Pro)"
+    provider: google
+    model: gemini-2.0-pro-exp
+    apiKey: ${{ secrets.GOOGLE_API_KEY2 }}
+    systemMessage: |
+      Context: Pulsar Plugin Development.
+      STRICT RULES:
+      - Target: .NET Framework 4.8.
+      - Coding Style: Modern C# features allowed where supported by .NET 4.8.
+      - Ensure compatibility with Pulsar API hooks.
+      - Safety: Ensure thread safety (MySandboxGame.Static.Invoke) for game world interaction.
+      - Performance: Optimize for server performance, avoid blocking calls and heavy computations in the main thread.
+      - Testing: Write unit tests for critical plugin logic. Use mock objects to simulate game interactions where possible.
+      - Documentation: Provide clear XML documentation for all public methods and classes to assist future maintenance and development.
+      - Versioning: Follow semantic versioning for plugin releases. Include changelog entries for each version update.
+      - Development: Always include the relative file path in the first comment line. Code comments must always be written in English.
+      
+  # 4. SPACE ENGINEERS: TORCH PLUGIN
+  - name: "SE: Torch Plugin (Gemini 2.0 Pro)"
+    provider: google
+    model: gemini-2.0-pro-exp
+    apiKey: ${{ secrets.GOOGLE_API_KEY }}
+    systemMessage: |
+      Context: Space Engineers Torch Server Plugin development (v1.3.1.328).
+      STRICT RULES:
+      - Target: .NET Framework 4.8.
+      - API: Torch.API, VRage.Game, Sandbox.ModAPI (Full API).
+      - Allowed: LINQ, Reflection, Multithreading, File I/O.
+      - Safety: Ensure thread safety (MySandboxGame.Static.Invoke) for game world interaction.
+      - Performance: Optimize for server performance, avoid blocking calls and heavy computations in the main thread.
+      - Testing: Write unit tests for critical plugin logic. Use mock objects to simulate game interactions where possible.
+      - Documentation: Provide clear XML documentation for all public methods and classes to assist future maintenance and development.
+      - Versioning: Follow semantic versioning for plugin releases. Include changelog entries for each version update.
+      - Development: Always include the relative file path in the first comment line. Code comments must always be written in English.
+      
+  # 5. SPACE ENGINEERS: WORLD MODS
+  - name: "SE: World Mod (Gemini 2.0 Pro)"
+    provider: google
+    model: gemini-2.0-pro-exp
+    apiKey: ${{ secrets.GOOGLE_API_KEY }}
+    systemMessage: |
+      Context: Space Engineers World Mod development (Client/Server side).
+      STRICT RULES:
+      - Target: C# 6.0 / .NET Framework 4.8.
+      - API: Sandbox.ModAPI, VRage.Game.ModAPI.
+      - Constraints: Whitelisted API only. NO File I/O, NO unsafe Reflection.
+      - Feature: Use Session Components and Gameloop (UpdateBeforeSimulation).
+      - Safety: Ensure thread safety (MySandboxGame.Static.Invoke) for game world interaction.
+      - Performance: Optimize for game performance, avoid blocking calls and heavy computations in the main game loop.
+      - Testing: Write unit tests for critical mod logic. Use mock objects to simulate game interactions where possible.
+      - Documentation: Provide clear XML documentation for all public methods and classes to assist future maintenance and development.
+      - Versioning: Follow semantic versioning for mod releases. Include changelog entries for each version update.
+      - Development: Always include the relative file path in the first comment line. Code comments must always be written in English.
+
+  # 6. UNITY EXPERT
+  - name: "Unity Expert (Gemini 2.0 Pro)"
+    provider: google
+    model: gemini-2.0-pro-exp
+    apiKey: ${{ secrets.GOOGLE_API_KEY }}
+    systemMessage: |
+      Context: Unity Engine (C# 9.0+ / .NET Standard 2.1).
+      STRICT RULES:
+      - API: UnityEngine, UnityEditor, UnityEngine.UI.
+      - Optimization: Cache references, use TryGetComponent.
+      - Physics: Use FixedUpdate and Rigidbody methods.
+      - Style: camelCase for private fields with '_' (e.g., _speed).
+      - Testing: Write unit tests for critical game logic. Use Unity's testing framework and mock objects where appropriate.
+      - Documentation: Provide clear XML documentation for all public methods and classes to assist future maintenance and development.
+      - Versioning: Follow semantic versioning for game releases. Include changelog entries for each version update.
+      - Development: Always include the relative file path in the first comment line. Code comments must always be written in English.
+      
+tabAutocompleteModel:
+  name: Gemini Autocomplete
+  provider: google
+  model: gemini-2.0-flash
+  apiKey: ${GOOGLE_API_KEY}
+
+tabAutocompleteOptions:
+  debounceDelay: 1500
+  maxPromptTokens: 512

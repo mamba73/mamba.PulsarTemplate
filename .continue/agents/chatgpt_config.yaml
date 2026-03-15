@@ -1,0 +1,106 @@
+name: ChatGPT Multi-Project Config
+version: 1.0.0
+schema: v1
+
+rules:
+  - "Language: Respond in Croatian (ijekavica) or English. No Serbian/Ekavica."
+  - "Comments: All code comments must be in ENGLISH."
+  - "File Header: Mandatory! Always put the relative file path as a comment in the very first line."
+
+contextProviders:
+  - name: codebase
+    params:
+      useReranking: true
+      nRetrieve: 20
+      nFinal: 5
+
+models:
+
+  # 1. SPACE ENGINEERS: IN-GAME SCRIPTS
+  - name: "SE: In-Game Script (GPT-5-mini)"
+    provider: openai
+    model: gpt-5-mini
+    apiKey: ${{ secrets.OPENAI_API_KEY }}
+    systemMessage: |
+      Context: Space Engineers (SE) In-Game Scripting (Programmable Block).
+      STRICT RULES:
+      - Use C# 6.0 and .NET Framework 4.6.
+      - API: VRage.Game, VRageMath, Sandbox.ModAPI.Ingame.
+      - Constraints: NO LINQ, NO Reflection, NO file access, NO multithreading.
+      - Style: Use string.Format() instead of interpolation ($).
+
+  # 2. SPACE ENGINEERS: TORCH PLUGIN
+  - name: "SE: Torch Plugin (GPT-5)"
+    provider: openai
+    model: gpt-5
+    apiKey: ${{ secrets.OPENAI_API_KEY }}
+    systemMessage: |
+      Context: Space Engineers Torch Server Plugin development (v1.3.1.328).
+      STRICT RULES:
+      - Target: .NET Framework 4.8.
+      - API: Torch.API, VRage.Game, Sandbox.ModAPI (Full API).
+      - Allowed: LINQ, Reflection, Multithreading, File I/O.
+      - Safety: Ensure thread safety (MySandboxGame.Static.Invoke) for game world interaction.
+
+  # 3. SPACE ENGINEERS: WORLD MODS
+  - name: "SE: World Mod (GPT-5)"
+    provider: openai
+    model: gpt-5
+    apiKey: ${{ secrets.OPENAI_API_KEY }}
+    systemMessage: |
+      Context: Space Engineers World Mod development (Client/Server side).
+      STRICT RULES:
+      - Target: C# 6.0 / .NET Framework 4.8.
+      - API: Sandbox.ModAPI, VRage.Game.ModAPI.
+      - Constraints: Whitelisted API only. NO File I/O, NO unsafe Reflection.
+      - Feature: Use Session Components and Gameloop (UpdateBeforeSimulation).
+
+  # 4. PULSAR PLUGIN
+  - name: "Pulsar Plugin (GPT-5)"
+    provider: openai
+    model: gpt-5
+    apiKey: ${{ secrets.OPENAI_API_KEY }}
+    systemMessage: |
+      Context: Pulsar Plugin Development.
+      STRICT RULES:
+      - Target: .NET Framework 4.8.
+      - Coding Style: Modern C# features allowed where supported by .NET 4.8.
+      - Ensure compatibility with Pulsar API hooks.
+
+  # 5. UNITY EXPERT
+  - name: "Unity Expert (GPT-5)"
+    provider: openai
+    model: gpt-5
+    apiKey: ${{ secrets.OPENAI_API_KEY }}
+    systemMessage: |
+      Context: Unity Engine (C# 9.0+ / .NET Standard 2.1).
+      STRICT RULES:
+      - API: UnityEngine, UnityEditor, UnityEngine.UI.
+      - Optimization: Cache references, use TryGetComponent.
+      - Physics: Use FixedUpdate and Rigidbody methods.
+      - Style: camelCase for private fields with '_' (e.g., _speed).
+
+  # 6. LARAVEL & PHP
+  - name: "Laravel 11 / PHP 8.3 (GPT-5)"
+    provider: openai
+    model: gpt-5
+    apiKey: ${{ secrets.OPENAI_API_KEY }}
+    systemMessage: |
+      Context: PHP 8.3 / Laravel 11.
+      STRICT RULES:
+      - Use modern PHP features: Readonly properties, Enums, Union types.
+      - Laravel: Follow latest conventions (Action classes, Form Requests, Vite).
+      - Style: PSR-12 coding standard.
+
+tabAutocompleteModel:
+  name: GPT-5 Autocomplete
+  provider: openai
+  model: gpt-5-mini
+  apiKey: ${{ secrets.OPENAI_API_KEY }}
+  options:
+    temperature: 0.1
+    maxTokens: 512
+
+tabAutocompleteOptions:
+  debounceDelay: 500
+  maxPromptTokens: 2048

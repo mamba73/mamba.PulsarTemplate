@@ -1,0 +1,243 @@
+name: ChatGPT ULTRA PRO Dev Config
+version: 3.0.0
+schema: v1
+
+rules:
+  - "Language: Respond in Croatian (ijekavica) or English. No Serbian/Ekavica."
+  - "Comments: All code comments must be in ENGLISH."
+  - "File Header: Mandatory! Always put the relative file path as a comment in the very first line."
+
+systemMessage: |
+  Global development assistant configuration.
+
+  HARD RULES:
+  - Always include the relative file path in the first comment line.
+  - All code comments must be written in English.
+  - Prefer safe and maintainable code.
+
+  SPACE ENGINEERS SAFETY:
+  - Respect Space Engineers scripting limitations.
+  - Torch plugins must ensure thread safety using MySandboxGame.Static.Invoke when touching game world objects.
+
+contextProviders:
+
+  # Project code
+  - name: codebase
+    params:
+      useReranking: true
+      nRetrieve: 30
+      nFinal: 10
+
+  # Documentation context
+  - name: docs
+    params:
+      maxChunks: 15
+
+  # Folder context
+  - name: folder
+
+  # Diff context (useful when editing files)
+  - name: diff
+
+models:
+
+  ############################################
+  # SPACE ENGINEERS PB SCRIPTING
+  ############################################
+  - name: "SE: PB Script Expert"
+    provider: openai
+    model: gpt-5
+    apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    options:
+      temperature: 0.15
+      maxTokens: 8000
+    systemMessage: |
+      Context: Space Engineers Programmable Block scripting.
+
+      TARGET:
+      - C# 6.0
+      - .NET Framework 4.6
+
+      API:
+      - VRage.Game
+      - VRageMath
+      - Sandbox.ModAPI.Ingame
+
+      HARD LIMITS:
+      - NO LINQ
+      - NO Reflection
+      - NO File IO
+      - NO multithreading
+
+      STYLE:
+      - Use string.Format() instead of interpolation.
+
+  ############################################
+  # TORCH SERVER PLUGIN
+  ############################################
+  - name: "SE: Torch Plugin Expert"
+    provider: openai
+    model: gpt-5
+    apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    options:
+      temperature: 0.15
+    systemMessage: |
+      Context: Space Engineers Torch Server Plugin development.
+
+      TARGET:
+      - .NET Framework 4.8
+
+      API:
+      - Torch.API
+      - VRage.Game
+      - Sandbox.ModAPI
+
+      ALLOWED:
+      - LINQ
+      - Reflection
+      - Multithreading
+      - File IO
+
+      SAFETY:
+      - Game world interactions must run inside:
+        MySandboxGame.Static.Invoke()
+
+      CODE STYLE:
+      - Avoid unnecessary allocations
+      - Prefer caching references
+
+  ############################################
+  # SPACE ENGINEERS WORLD MOD
+  ############################################
+  - name: "SE: World Mod Expert"
+    provider: openai
+    model: gpt-5
+    apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    options:
+      temperature: 0.2
+    systemMessage: |
+      Context: Space Engineers world mod development.
+
+      TARGET:
+      - C# 6.0
+      - .NET Framework 4.8
+
+      API:
+      - Sandbox.ModAPI
+      - VRage.Game.ModAPI
+
+      CONSTRAINTS:
+      - Whitelisted API only
+      - Avoid file IO
+      - Avoid unsafe reflection
+
+      STRUCTURE:
+      - Use Session Components
+      - UpdateBeforeSimulation
+
+  ############################################
+  # PULSAR PLUGIN
+  ############################################
+  - name: "Pulsar Plugin Expert"
+    provider: openai
+    model: gpt-5
+    apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    options:
+      temperature: 0.2
+    systemMessage: |
+      Context: Pulsar plugin development.
+
+      TARGET:
+      - .NET Framework 4.8
+
+      REQUIREMENTS:
+      - Compatibility with Pulsar API hooks
+      - Thread-safe operations
+      - Clean architecture
+
+  ############################################
+  # UNITY DEVELOPMENT
+  ############################################
+  - name: "Unity Expert"
+    provider: openai
+    model: gpt-5
+    apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    options:
+      temperature: 0.2
+    systemMessage: |
+      Context: Unity Engine development.
+
+      API:
+      - UnityEngine
+      - UnityEditor
+      - UnityEngine.UI
+
+      OPTIMIZATION:
+      - Cache component references
+      - Use TryGetComponent
+
+      PHYSICS:
+      - FixedUpdate
+      - Rigidbody methods
+
+  ############################################
+  # LARAVEL / PHP
+  ############################################
+  - name: "Laravel Expert"
+    provider: openai
+    model: gpt-5
+    apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    options:
+      temperature: 0.2
+    systemMessage: |
+      Context: Laravel 11 / PHP 8.3 development.
+
+      PHP:
+      - Enums
+      - Readonly properties
+      - Union types
+
+      LARAVEL:
+      - Action classes
+      - Form Requests
+      - Vite
+
+      STYLE:
+      - Follow PSR-12
+
+tabAutocompleteModel:
+  name: GPT-5 Fast Autocomplete
+  provider: openai
+  model: gpt-5-mini
+  apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+  options:
+    temperature: 0.1
+    maxTokens: 512
+
+tabAutocompleteOptions:
+  debounceDelay: 300
+  maxPromptTokens: 2048

@@ -1,92 +1,35 @@
-using System;
-using System.IO;
+// Plugin/MainPlugin.cs
 using VRage.Plugins;
-using Sandbox.ModAPI;
-using Sandbox.Graphics.GUI;
-using mamba.PulsarTemplate.Plugin.Models;
-using mamba.PulsarTemplate.Plugin.Utils;
-using mamba.PulsarTemplate.Plugin.Logic;
+using PulsarTemplate.Config;
+using PulsarTemplate.Core;
 
-namespace mamba.PulsarTemplate.Plugin
+namespace PulsarTemplate
 {
+    /*
+     * MainPlugin
+     * ----------
+     * Entry point for the Space Engineers client plugin.
+     * Registered automatically by Pulsar via IPlugin.
+     *
+     * Keep this file minimal — delegate all logic to PluginCore.
+     */
     public class MainPlugin : IPlugin
     {
-        private Config _config;
-        private bool _sessionInitialized = false;
-        private string _storagePath;
+        private static PluginConfig _config = new PluginConfig();
 
         public void Init(object gameInstance)
         {
-            _storagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                                        "SpaceEngineers", "Storage", "mamba.PulsarTemplate");
-
-            ReloadConfig(); // Initial load
-            LoggerUtil.LogInfo("Plugin core initialized.");
+            PluginCore.Init(_config);
         }
-
-        /// <summary>
-        /// Reloads the config from disk and re-initializes dependent utilities.
-        /// </summary>
-        private void ReloadConfig()
-        {
-            _config = Config.LoadOrCreate(_storagePath);
-            LoggerUtil.Init(_config);
-
-            // Re-bind command handler if it was already initialized
-            if (_sessionInitialized)
-            {
-                CommandHandler.Dispose();
-                CommandHandler.Init(_config, ReloadConfig);
-            }
-
-            LoggerUtil.LogDebug("Configuration reloaded and applied.");
-        }
-        /// <summary>
-        /// This method is called by Pulsar Loader when the 'Settings' button is clicked.
-        /// </summary>
-        public void OpenConfig()
-        {
-            try
-            {
-                if (_config == null) return;
-
-                // Ensure we are not adding multiple screens
-                var configUI = new ConfigUI(_config, _storagePath);
-                MyGuiSandbox.AddScreen(configUI);
-
-                LoggerUtil.LogDebug("Configuration UI opened.");
-            }
-            catch (Exception ex)
-            {
-                LoggerUtil.LogError("Failed to open Config UI: " + ex.Message);
-            }
-        }
-
-        // Just in case Pulsar version uses ShowConfig naming convention
-        public void ShowConfig() => OpenConfig();
 
         public void Update()
         {
-            if (MyAPIGateway.Session == null || MyAPIGateway.Input == null) return;
-
-            if (!_sessionInitialized)
-            {
-                HandleSessionInit();
-                _sessionInitialized = true;
-            }
-        }
-
-        private void HandleSessionInit()
-        {
-            CommandHandler.Init(_config, ReloadConfig);
-            MyAPIGateway.Utilities.ShowMessage(_config.ProjectName, "Template started");
-            LoggerUtil.LogSuccess("Session Initialization complete.");
+            PluginCore.Update();
         }
 
         public void Dispose()
         {
-            if (_config != null) _config.Save(_storagePath);
-            CommandHandler.Dispose();
+            PluginCore.Dispose();
         }
     }
 }

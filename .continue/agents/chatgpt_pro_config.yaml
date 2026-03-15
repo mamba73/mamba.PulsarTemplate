@@ -1,0 +1,212 @@
+name: ChatGPT PRO Multi-Project Config
+version: 2.0.0
+schema: v1
+
+# GLOBAL RULES
+rules:
+  - "Language: Respond in Croatian (ijekavica) or English. No Serbian/Ekavica."
+  - "Comments: All code comments must be in ENGLISH."
+  - "File Header: Mandatory! Always put the relative file path as a comment in the very first line."
+
+# GLOBAL SYSTEM PROMPT
+systemMessage: |
+  Always respect Space Engineers API limitations.
+  Always include the relative file path in the first comment line.
+  Code comments must always be written in English.
+
+# CONTEXT PROVIDERS
+contextProviders:
+
+  # Project code context
+  - name: codebase
+    params:
+      useReranking: true
+      nRetrieve: 25
+      nFinal: 8
+
+  # Documentation context
+  - name: docs
+    params:
+      maxChunks: 10
+
+# MODELS
+models:
+
+  # 1. SPACE ENGINEERS PB SCRIPTS
+  - name: "SE: Ingame PB (GPT-5)"
+    provider: openai
+    model: gpt-5
+    apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    options:
+      temperature: 0.2
+      maxTokens: 8000
+    systemMessage: |
+      Context: Space Engineers Programmable Block scripting.
+
+      STRICT RULES:
+      - C# 6.0
+      - .NET Framework 4.6
+      - API: VRage.Game, VRageMath, Sandbox.ModAPI.Ingame
+
+      HARD LIMITS:
+      - NO LINQ
+      - NO Reflection
+      - NO file access
+      - NO multithreading
+
+      STYLE:
+      - Use string.Format() instead of interpolation.
+
+  # 2. TORCH SERVER PLUGIN
+  - name: "SE: Torch Plugin (GPT-5)"
+    provider: openai
+    model: gpt-5
+    apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    options:
+      temperature: 0.15
+      maxTokens: 8000
+    systemMessage: |
+      Context: Space Engineers Torch Server Plugin development.
+
+      STRICT RULES:
+      - Target: .NET Framework 4.8
+      - API: Torch.API, VRage.Game, Sandbox.ModAPI (Full API)
+
+      Allowed:
+      - LINQ
+      - Reflection
+      - Multithreading
+      - File I/O
+
+      SAFETY:
+      - Game world interaction MUST run inside
+        MySandboxGame.Static.Invoke()
+
+  # 3. SPACE ENGINEERS WORLD MOD
+  - name: "SE: World Mod (GPT-5)"
+    provider: openai
+    model: gpt-5
+    apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    options:
+      temperature: 0.2
+    systemMessage: |
+      Context: Space Engineers World Mod development.
+
+      STRICT RULES:
+      - Target: C# 6.0
+      - .NET Framework 4.8
+      - API: Sandbox.ModAPI, VRage.Game.ModAPI
+
+      CONSTRAINTS:
+      - Whitelisted API only
+      - NO File I/O
+      - Avoid unsafe Reflection
+
+      Use:
+      - Session Components
+      - GameLoop updates
+      - UpdateBeforeSimulation()
+
+  # 4. PULSAR PLUGIN
+  - name: "Pulsar Plugin (GPT-5)"
+    provider: openai
+    model: gpt-5
+    apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    options:
+      temperature: 0.2
+    systemMessage: |
+      Context: Pulsar Plugin Development.
+
+      STRICT RULES:
+      - Target: .NET Framework 4.8
+      - Maintain compatibility with Pulsar API hooks
+
+      STYLE:
+      - Clean architecture
+      - Avoid unnecessary allocations
+      - Thread-safe patterns
+
+  # 5. UNITY DEVELOPMENT
+  - name: "Unity Expert (GPT-5)"
+    provider: openai
+    model: gpt-5
+    apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    options:
+      temperature: 0.2
+    systemMessage: |
+      Context: Unity Engine development.
+
+      API:
+      - UnityEngine
+      - UnityEditor
+      - UnityEngine.UI
+
+      BEST PRACTICES:
+      - Cache references
+      - Use TryGetComponent
+      - Use FixedUpdate for physics
+
+      STYLE:
+      - private fields use _camelCase
+
+  # 6. LARAVEL / PHP
+  - name: "Laravel 11 / PHP 8.3"
+    provider: openai
+    model: gpt-5
+    apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+    options:
+      temperature: 0.2
+    systemMessage: |
+      Context: Laravel 11 / PHP 8.3 development.
+
+      REQUIREMENTS:
+      - Follow PSR-12
+      - Use modern PHP features
+
+      PHP:
+      - Enums
+      - Readonly properties
+      - Union types
+
+      Laravel:
+      - Form Requests
+      - Action classes
+      - Vite build system
+
+# AUTOCOMPLETE MODEL
+tabAutocompleteModel:
+  name: GPT-5 Fast Autocomplete
+  provider: openai
+  model: gpt-5-mini
+  apiKey: apiKey:${{ secrets.OPENAI_API_KEY }}
+  options:
+    temperature: 0.1
+    maxTokens: 512
+
+tabAutocompleteOptions:
+  debounceDelay: 350
+  maxPromptTokens: 2048
