@@ -9,7 +9,7 @@ A high-level modular template for Pulsar plugins, featuring a robust configurati
 **Space Engineers**: 1.204+  
 **Platform**: Pulsar Plugin Loader  
 **Author**: mamba  
-**Version**: 0.0.1
+**Version**: 0.0.2
 ```
 
 ---

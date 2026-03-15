@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using VRage.Plugins;
 using Sandbox.ModAPI;
+using Sandbox.Graphics.GUI;
 using mamba.PulsarTemplate.Plugin.Models;
 using mamba.PulsarTemplate.Plugin.Utils;
 using mamba.PulsarTemplate.Plugin.Logic;
@@ -40,6 +41,29 @@ namespace mamba.PulsarTemplate.Plugin
 
             LoggerUtil.LogDebug("Configuration reloaded and applied.");
         }
+        /// <summary>
+        /// This method is called by Pulsar Loader when the 'Settings' button is clicked.
+        /// </summary>
+        public void OpenConfig()
+        {
+            try
+            {
+                if (_config == null) return;
+
+                // Ensure we are not adding multiple screens
+                var configUI = new ConfigUI(_config, _storagePath);
+                MyGuiSandbox.AddScreen(configUI);
+
+                LoggerUtil.LogDebug("Configuration UI opened.");
+            }
+            catch (Exception ex)
+            {
+                LoggerUtil.LogError("Failed to open Config UI: " + ex.Message);
+            }
+        }
+
+        // Just in case Pulsar version uses ShowConfig naming convention
+        public void ShowConfig() => OpenConfig();
 
         public void Update()
         {

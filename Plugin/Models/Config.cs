@@ -2,83 +2,48 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 using VRage.Input;
-using mamba.PulsarTemplate.Plugin.Utils;
 
 namespace mamba.PulsarTemplate.Plugin.Models
 {
     public class Config
     {
-        // ===================================================================
-        // VERSIONING & METADATA
-        // ===================================================================
-        public string PluginVersion { get; set; } = "1.0.0";
+        public string PluginVersion { get; set; } = "0.0.2";
         public string ProjectName { get; set; } = "PulsarTemplate";
-
-        // ===================================================================
-        // GLOBAL SETTINGS
-        // ===================================================================
         public bool Debug { get; set; } = true;
-        public bool LogChat { get; set; } = true;
-        public string CommandPrefix { get; set; } = "/pulsar"; // Configurable prefix
-
-        // ===================================================================
-        // PATH SETTINGS
-        // ===================================================================
+        public string CommandPrefix { get; set; } = "/pulsar";
         public string StorageFolder { get; set; } = "mamba.PulsarTemplate";
         public string LogSubFolder { get; set; } = "log";
-
-        // ===================================================================
-        // INPUT SETTINGS
-        // ===================================================================
         public MyKeys MenuKey { get; set; } = MyKeys.NumPad0;
 
-        // ===================================================================
-        // CORE LOGIC: LOADING & SAVING
-        // ===================================================================
-
-        /// <summary>
-        /// Loads the configuration from disk. If the file exists, it merges stored 
-        /// values with current defaults to ensure new fields are included.
-        /// </summary>
         public static Config LoadOrCreate(string folderPath)
         {
             string filePath = Path.Combine(folderPath, "Config.xml");
-            Config defaultConfig = new Config();
+            if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+
+            if (!File.Exists(filePath))
+            {
+                Config newConfig = new Config();
+                newConfig.Save(folderPath);
+                return newConfig;
+            }
 
             try
             {
-                if (!Directory.Exists(folderPath))
-                    Directory.CreateDirectory(folderPath);
-
-                if (!File.Exists(filePath))
-                {
-                    defaultConfig.Save(folderPath);
-                    return defaultConfig;
-                }
-
                 XmlSerializer serializer = new XmlSerializer(typeof(Config));
                 using (StreamReader reader = new StreamReader(filePath))
                 {
-                    Config loadedConfig = (Config)serializer.Deserialize(reader);
-
-                    // The "Merge" step: loadedConfig has user values, 
-                    // but we save it back immediately to write any new default fields 
-                    // that were added during development.
-                    loadedConfig.Save(folderPath);
-                    return loadedConfig;
+                    Config loaded = (Config)serializer.Deserialize(reader);
+                    loaded.Save(folderPath);
+                    return loaded;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                // We don't have LoggerUtil initialized yet when this runs in Init, 
-                // so we fallback to a simple string or SE Log.
-                return defaultConfig;
+                // Removed 'ex' to prevent CS0168 warning
+                return new Config();
             }
         }
 
-        /// <summary>
-        /// Serializes the current configuration object to an XML file.
-        /// </summary>
         public void Save(string folderPath)
         {
             try
@@ -90,18 +55,13 @@ namespace mamba.PulsarTemplate.Plugin.Models
                     serializer.Serialize(writer, this);
                 }
             }
-            catch (Exception)
-            {
-                // Silent fail to prevent game crashes
-            }
+            catch { }
         }
 
         public string GetStoragePath()
         {
-            return Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "SpaceEngineers", "Storage", StorageFolder
-            );
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                "SpaceEngineers", "Storage", StorageFolder);
         }
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Reflection;
 using mamba.PulsarTemplate.Plugin.Models;
 using VRage.Utils;
 
@@ -21,39 +20,37 @@ namespace mamba.PulsarTemplate.Plugin.Utils
             try
             {
                 string logDir = Path.Combine(config.GetStoragePath(), config.LogSubFolder, "archive");
-                if (!Directory.Exists(logDir))
-                    Directory.CreateDirectory(logDir);
+                if (!Directory.Exists(logDir)) Directory.CreateDirectory(logDir);
 
                 string date = DateTime.Now.ToString("yyyy-MM-dd");
                 string time = DateTime.Now.ToString("HHmmss");
-                string version = config.PluginVersion;
 
-                // Filename format: 2026-03-14_214113_PulsarTemplate_v1.0.0.log
-                string fileName = $"{date}_{time}_{config.ProjectName}_v{version}.log";
+                string fileName = $"{date}_{time}_{config.ProjectName}_v{config.PluginVersion}.log";
                 _logFile = Path.Combine(logDir, fileName);
 
-                LogInfo("Logger initialized successfully.");
+                LogInfo("Logger initialized.");
             }
             catch (Exception ex)
             {
-                MyLog.Default.WriteLine($"{_prefix} [ERROR] Logger failure: {ex.Message}");
+                MyLog.Default.WriteLine($"{_prefix} Logger failure: {ex.Message}");
             }
         }
 
-        public static void LogInfo(string message) => WriteLog("INFO", message);
-        public static void LogError(string message) => Log("ERROR", message);
+        public static void LogInfo(string message) => WriteLog("INFO   ", message);
+        public static void LogError(string message) => WriteLog("ERROR  ", message);
         public static void LogSuccess(string message) => WriteLog("SUCCESS", message);
-        public static void LogDebug(string message) { if (_config?.Debug == true) WriteLog("DEBUG", message); }
+        public static void LogDebug(string message) { if (_config?.Debug == true) WriteLog("DEBUG  ", message); }
 
         private static void WriteLog(string level, string message)
         {
             if (_logFile == null) return;
-            string line = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] [{level}] {message}";
+            string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            string line = $"[{timestamp}] [{level}] {message}";
+
             MyLog.Default.WriteLine($"{_prefix} {line}");
             try
             {
-                lock (_lock)
-                    File.AppendAllText(_logFile, line + Environment.NewLine);
+                lock (_lock) File.AppendAllText(_logFile, line + Environment.NewLine);
             }
             catch { }
         }
