@@ -7,7 +7,7 @@ namespace mamba.PulsarTemplate.Plugin.Models
 {
     public class Config
     {
-        public string PluginVersion { get; set; } = "0.0.2";
+        public string PluginVersion { get; set; } = "0.0.3";
         public string ProjectName { get; set; } = "PulsarTemplate";
         public bool Debug { get; set; } = true;
         public string CommandPrefix { get; set; } = "/pulsar";
