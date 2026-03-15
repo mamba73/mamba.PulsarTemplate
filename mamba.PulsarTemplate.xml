@@ -3,8 +3,8 @@
   <Id>mamba73/mamba.PulsarTemplate</Id>
   <FriendlyName>mamba.PulsarTemplate</FriendlyName>
   <Author>mamba</Author>
-  <Version>0.0.30</Version>
+  <Version>0.0.38</Version>
   <Tooltip>Pulsar Space Engineers plugin template.</Tooltip>
   <Description>Base template for creating Pulsar client plugins with config UI and command system.</Description>
-  <Commit>f96924c11e5425e29dba321cf87859ea96ee7e54</Commit>
+  <Commit>5a83d99930b69cda9bb1a2b4fd5b939b829d3f60</Commit>
 </PluginData>

@@ -19,7 +19,7 @@ namespace PulsarTemplate.Config
      */
     public class PluginConfig
     {
-        public string PluginVersion { get; set; } = "0.0.30";
+        public string PluginVersion { get; set; } = "0.0.38";
 
         public bool Debug = true;
 

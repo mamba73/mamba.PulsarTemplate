@@ -3,6 +3,13 @@ using VRage.Plugins;
 using PulsarTemplate.Config;
 using PulsarTemplate.Core;
 
+// Ovo je stub interfejs da kompajler ne kuka.
+// Kad dodaš pravi Pulsar/PB DLL, ovo možeš ukloniti.
+namespace PulsarTemplate
+{
+    public interface IMyPluginConfig { }
+}
+
 namespace PulsarTemplate
 {
     /*
@@ -16,6 +23,11 @@ namespace PulsarTemplate
     public class MainPlugin : IPlugin
     {
         private static PluginConfig _config = new PluginConfig();
+
+        public IMyPluginConfig GetPluginConfig()
+        {
+            return new PluginConfigBridge(_config);
+        }
 
         public void Init(object gameInstance)
         {
